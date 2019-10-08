@@ -22,7 +22,8 @@ public class SteeringFollowPath : MonoBehaviour {
         path = GetComponent<FollowCurve>().path;
 
         // TODO 1: Calculate the closest point from the tank to the curve
-        current_point = path.CalcPositionByClosestPoint(move.transform.position);
+        current_point = path.CalcPositionByClosestPoint(transform.position,out current_ratio);
+        current_ratio /= path.GetDistance();
 	}
 	
 	// Update is called once per frame
