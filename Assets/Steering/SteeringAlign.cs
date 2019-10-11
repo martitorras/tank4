@@ -17,29 +17,25 @@ public class SteeringAlign : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		// Orientation we are trying to match
-        float delta_angle = Vector3.SignedAngle(transform.forward, move.target.transform.forward, new Vector3(0.0f, 1.0f, 0.0f));
-
-
-        float diff_absolute = Mathf.Abs(delta_angle);
-
-		if(diff_absolute < min_angle)
-		{
-			move.SetRotationVelocity(0.0f);
-			return;
-		}
-
-        float ideal_rotation_speed = move.max_rot_speed;
-
-        if (diff_absolute < slow_angle)
-            ideal_rotation_speed *= (diff_absolute / slow_angle);
-
-		float angular_acceleration = ideal_rotation_speed / time_to_accel;
-
-        //Invert rotation direction if the angle is negative
-		if(delta_angle < 0)
-			angular_acceleration = -angular_acceleration;
-
-		move.AccelerateRotation(Mathf.Clamp(angular_acceleration, -move.max_rot_acceleration, move.max_rot_acceleration));
-	}
+        Vector3 diff = transform.forward;
+        Vector3 axis;
+        axis.x = 0.0f;
+        axis.y = 1.0f;
+        axis.z = 0.0f;
+        Vector3 current = move.current_velocity;
+        float desired = Vector3.SignedAngle(diff, current, axis);
+        //move.SetRotationVelocity(desired);
+        float accel = (desired - move.current_rotation_speed) * Time.deltaTime * 3;
+        //desired = desired.normalized * move.max_mov_speed * slow_distance;
+        if (desired < 0) desired = -desired;
+        if (desired < min_angle)//desired absolut
+        {
+            move.SetRotationVelocity(0.0f);
+        }
+        else
+        {
+            Mathf.Clamp(accel, move.max_rot_acceleration, -move.max_rot_acceleration);
+            move.AccelerateRotation(accel);
+        }
+    }
 }

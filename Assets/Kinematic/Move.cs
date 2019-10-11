@@ -10,7 +10,7 @@ public class Move : MonoBehaviour {
 	public float max_mov_speed = 5.0f;
 	public float max_mov_acceleration = 0.1f;
 	public float max_rot_speed = 10.0f; // in degrees / second
-	public float max_rot_acceleration = 0.1f; // in degrees
+	public float max_rot_acceleration = 1.0f; // in degrees
 
 	[Header("-------- Read Only --------")]
 	public Vector3 current_velocity = Vector3.zero;
@@ -40,6 +40,7 @@ public class Move : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+        
 		// cap velocity
 		if(current_velocity.magnitude > max_mov_speed)
 		{
